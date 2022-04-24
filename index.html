@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+/* body{
+    background-image: url("https://static.vecteezy.com/system/resources/previews/002/597/659/non_2x/abstract-light-red-pink-and-orange-gradient-background-with-diagonal-stripe-lines-and-texture-modern-and-simple-banner-design-you-can-use-for-business-presentation-poster-template-illustration-vector.jpg");
+} */
+#slide{
+    width: 80%;
+    height: 700px;
+    margin: auto;
+    
+}
+#search{
+    text-align: center;
+    /* margin-top: 30px */
+}
+button{
+    padding:7px 70px 7px 70px ;
+background-color: black;
+color: white;
+cursor: pointer;
+border-radius: 10px;
+    
+}
+input{
+   
+    margin: 15px 0;
+      font-size: 18px;
+      padding:7px 100px 7px 100px ;
+}
+#container {
+
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+   gap: 20px;
+   width: 90%;
+    height: 400px;
+   margin: auto;
+ margin-top: -200px;
+}
+.box{
+    
+  width: 80%;
+    height: 550px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    margin-left: 20px;
+    cursor: pointer;
+    border-radius: 15px;
+    text-align: center;
+}
+img{
+    width: 100%;
+    height: 65%;
+    border-radius: 15px;
+}
+.box>img{
+    width: 100%;
+    height: 55%;
+    border-radius: 15px;
+}
+
+
+
+</style>
+<body>
+    
+    <div id="search">
+        <input type="text" id="movie" placeholder="Enter movie name">
+        <button id="button" onclick="getData()">Search</button>
+    </div>
+   
+   
+    <div id="slide">
+        <img  src="" alt="">
+    </div>
+   
+   
+    <div id="container">
+
+        <p id="rec" style="color: rgb(7, 63, 247); "></p>
+    </div>
+</body>
+<script>
+  
+  // slideshow img
+
+  slide();
+var slideMovie = [
+    "https://assets.thehansindia.com/h-upload/2021/12/09/1126712-kgf.webp",
+"https://i.ytimg.com/vi/Q1NKMPhP8PY/maxresdefault.jpg",
+"https://i.ytimg.com/vi/k-POG1-Cp1k/maxresdefault.jpg",
+"https://i.ytimg.com/vi/tQ0mzXRk-oM/maxresdefault.jpg",
+"https://images.thedirect.com/media/article_full/thor-4-natalie-portman-poster.jpg",
+
+
+];
+
+var start = 0;
+
+function slide() {
+  setInterval(slideShow, 2000);
+}
+
+function slideShow() {
+  start = start % 5;
+  
+
+  document.querySelector("#slide>img").src = slideMovie[start];
+  start++;
+}
+
+
+
+
+
+
+//API connect
+
+    var API_KEY = "2d1bfc00";
+    
+    async function getData(){
+      
+        var movie = document.querySelector("#movie").value;
+        let res = await fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&t=${movie}`);
+
+        
+        let data = await res.json();
+        displayData(data)
+         console.log(data);
+    }
+   
+    //  box append into div
+
+
+
+     function displayData(data){
+//  event.preventDefault()
+        // data.forEach(function(data) {
+            // container.innerHTML = "";
+            var box = document.createElement('div');
+            box.setAttribute('class','box')
+            var img= document.createElement('img')
+            img.src = data.Poster
+
+            var title = document.createElement('h2')
+            title.innerText = data.Title
+
+            var release = document.createElement('p');
+            release.innerText = data.Released
+
+            var rating =document.createElement('p');
+            rating.innerText = data.imdbRating
+
+            var actor = document.createElement('p');
+            actor.innerText = data.Actors
+
+            var writer = document.createElement('p');
+            writer.innerText = data.Writer
+
+
+            var rec = document.getElementById("rec");
+
+                if(Number(data.imdbRating) > 8.5){
+                    rec.innerText = "RECOMMENDED"
+                }else{
+                    rec.innerText = "";
+                }
+
+
+           box.append(img,title,release,rating,actor,writer,rec);
+           document.querySelector('#container').append(box)
+          
+            
+        // });
+
+     }
+</script>
+</html>
